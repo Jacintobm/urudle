@@ -39,15 +39,28 @@
     </div>
 
     <script>
-        const wordList = ["mateo", "burro", "pucho", "yuyo", "gurí"];
+        const wordList = ["manya", "burro", "pucho", "yuyos", "cheto", "ñoqui", "quemo", "bardo", "pique", "gamba", "boton", "birra", "facha", "asado", "fiero", "trapo", "pinta", "fiaca", "chori"];
         const definitions = {
-            "MATEO": "Persona aficionada al estudio.",
-            "BURRO": "Animal de carga, también se usa como insulto en Uruguay.",
+            "MANYA": "Hinchas del Club Atlético Peñarol.",
+            "BURRO": "Animal de carga, también se usa como insulto.",
             "PUCHO": "Resto del cigarro o algo en pequeña cantidad.",
-            "YUYO": "Hierba silvestre, también usada en infusiones.",
-            "GURÍ": "Niño o joven en Uruguay."
-        };
-
+            "YUYOS": "Hierbas silvestres, también usada en infusiones.",
+            "CHETO": "Persona con dinero",
+ "ÑOQUI": "Persona que tiene un puesto de trabajo pero no hace nada",
+ "QUEMO": "Persona que hace pasar vergüenza a los demás",
+"BARDO": "Se utiliza para referirse a un lío, descontrol, quilombo o despelote",
+"PIQUE": "Dar o recibir una especie de consejo",
+"GAMBA": "Pierna, se utiliza también para pedir que no de te dejen solo/tirado",
+"BOTON": "Se utiliza para referirse a un policía o a un delator",
+"BIRRA": "Forma de llamar a la Cerveza",
+"FACHA": "Una persona que se ve o se viste bien",
+"ASADO": "Comida típica de Uruguay, carne cocinada a las brasas",
+"FIERO": "Alguien o algo feo, muy feo",
+"Trapo": "Bandera que suele utilizarse para alentar a un equipo de futbol",
+"Pinta": "Se utiliza para indicar una medida de cerveza y para decir que una persona está elegante",
+"fiaca": "Forma de decir que tenés pereza o paja", 
+"chori": "Disminutivo de chorizo, comida típica de Uruguay",
+ };
         const todayIndex = new Date().getDate() % wordList.length;
         const word = wordList[todayIndex].toUpperCase();
         let attempts = Array(6).fill(null).map(() => Array(5).fill({ char: "", status: "" }));
