@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urudle 🧉</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        .grid-container { display: flex; flex-direction: column; align-items: center; margin-top: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(5, 50px); gap: 5px; }
+        .row { display: flex; }
+        .cell { width: 50px; height: 50px; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; text-transform: uppercase; background-color: white; }
+        .correct { background-color: green; color: white; }
+        .present { background-color: orange; color: white; }
+        .absent { background-color: gray; color: white; }
+        .keyboard { display: grid; grid-template-columns: repeat(10, 30px); gap: 5px; justify-content: center; margin-top: 20px; }
+        .key { width: 30px; height: 30px; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; text-transform: uppercase; background-color: lightgray; cursor: pointer; }
+        .key.correct { background-color: green; color: white; }
+        .key.present { background-color: orange; color: white; }
+        .key.absent { background-color: red; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Urudle 🧉</h1>
+    <div class="grid-container" id="grid"></div>
+    <p id="message"></p>
+    <div class="keyboard" id="keyboard"></div>
+
+    <script>
+        const wordList = ["manya", "burro", "pucho", "yuyos", "cheto", "ñoqui", "quemo", "bardo", "piqui", "gamba", "boton", "birra", "facha", "asado", "fiero", "trapo", "pinta", "fiaca", "chori"];
+        const todayIndex = new Date().getDate() % wordList.length;
+        const word = wordList[todayIndex].toUpperCase();
+        let attempts = Array(6).fill(null).map(() => Array(5).fill({ char: "", status: "" }));
+        let usedLetters = {};
+        let currentAttempt = 0;
+        let currentLetter = 0;
+        const maxAttempts = 6;
+
+        function createGrid() {
+            const gridContainer = document.getElementById("grid");
+            gridContainer.innerHTML = "";
+            attempts.forEach((row, i) => {
+                const rowDiv = document.createElement("div");
+                rowDiv.className = "row";
+                row.forEach((cell, j) => {
+                    let cellDiv = document.createElement("div");
+                    cellDiv.className = "cell " + cell.status;
+                    cellDiv.textContent = cell.char;
+                    rowDiv.appendChild(cellDiv);
+                });
+                gridContainer.appendChild(rowDiv);
+            });
+        }
+
+        function createKeyboard() {
+            const keyboardContainer = document.getElementById("keyboard");
+            keyboardContainer.innerHTML = "";
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+            letters.forEach(letter => {
+                let key = document.createElement("div");
+                key.className = "key";
+                key.textContent = letter;
+                if (usedLetters[letter]) {
+                    key.classList.add(usedLetters[letter]);
+                }
+                keyboardContainer.appendChild(key);
+            });
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if (currentAttempt >= maxAttempts) return;
+            let key = event.key.toUpperCase();
+            if (/^[A-Z]$/.test(key) && currentLetter < 5) {
+                attempts[currentAttempt][currentLetter] = { char: key, status: "" };
+                currentLetter++;
+            } else if (key === "BACKSPACE" && currentLetter > 0) {
+                currentLetter--;
+                attempts[currentAttempt][currentLetter] = { char: "", status: "" };
+            } else if (key === "ENTER" && currentLetter === 5) {
+                checkWord();
+            }
+            createGrid();
+        });
+
+        function checkWord() {
+            const input = attempts[currentAttempt].map(cell => cell.char).join("");
+            if (input.length !== 5) return;
+
+            let result = input.split('').map((char, i) => {
+                if (char === word[i]) {
+                    usedLetters[char] = "correct";
+                    return { char, status: "correct" };
+                }
+                if (word.includes(char)) {
+                    if (!usedLetters[char]) usedLetters[char] = "present";
+                    return { char, status: "present" };
+                }
+                usedLetters[char] = "absent";
+                return { char, status: "absent" };
+            });
+            
+            attempts[currentAttempt] = result;
+            currentAttempt++;
+            currentLetter = 0;
+            createGrid();
+            createKeyboard();
+            
+            if (input === word) {
+                document.getElementById("message").textContent = "¡Felicidades! Adivinaste la palabra.";
+            } else if (currentAttempt >= maxAttempts) {
+                document.getElementById("message").textContent = `Perdiste. La palabra era ${word}.`;
+            }
+        }
+        
+        createGrid();
+        createKeyboard();
+    </script>
+</body>
+</html>
