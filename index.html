@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urudle</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      text-align: center; 
+      background-color: #f4f4f4; 
+      margin: 0; 
+      padding: 0;
+    }
+    /* La imagen se limitará a 300px de ancho */
+    .logo { 
+      margin-top: 20px; 
+      max-width: 300px; 
+      width: 100%; 
+      height: auto; 
+    }
+    .grid-container { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      margin-top: 20px; 
+    }
+    .grid { 
+      display: grid; 
+      grid-template-columns: repeat(5, 50px); 
+      gap: 5px; 
+    }
+    .cell { 
+      width: 50px; 
+      height: 50px; 
+      border: 2px solid #ccc; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 24px; 
+      font-weight: bold; 
+      text-transform: uppercase; 
+      background-color: white; 
+    }
+    /* El teclado se muestra en 11 columnas para incluir la Ñ */
+    .keyboard { 
+      display: grid; 
+      grid-template-columns: repeat(11, 1fr); 
+      gap: 5px; 
+      justify-content: center; 
+      margin-top: 20px; 
+    }
+    .key { 
+      padding: 10px; 
+      border: 2px solid #ccc; 
+      background-color: lightgray; 
+      font-size: 16px; 
+      font-weight: bold; 
+      text-transform: uppercase; 
+      cursor: pointer; 
+    }
+    /* Input off-screen pero accesible para forzar la apertura del teclado en móviles */
+    #hiddenInput { 
+      position: absolute; 
+      left: -9999px; 
+      width: 1px; 
+      height: 1px; 
+      opacity: 0; 
+    }
+  </style>
+</head>
+<body>
+  <!-- Se muestra únicamente la imagen del logo -->
+  <img src="logo.png" alt="Urudle" class="logo" />
+  
+  <div class="grid-container" id="grid"></div>
+  <div class="keyboard" id="keyboard"></div>
+  
+  <!-- Input fuera de pantalla para que en mobile se abra el teclado virtual -->
+  <input type="text" id="hiddenInput" autocomplete="off" autocorrect="off" spellcheck="false" />
+  
+  <script>
+    // Para que el input off-screen reciba el foco y así se despliegue el teclado en mobile
+    const hiddenInput = document.getElementById("hiddenInput");
+    window.addEventListener("load", () => hiddenInput.focus());
+    hiddenInput.addEventListener("blur", () => setTimeout(() => hiddenInput.focus(), 0));
+    
+    function createKeyboard() {
+      const keyboardContainer = document.getElementById("keyboard");
+      keyboardContainer.innerHTML = "";
+      // Alfabeto español con Ñ
+      const letters = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
+      letters.forEach(letter => {
+        let key = document.createElement("div");
+        key.className = "key";
+        key.textContent = letter;
+        keyboardContainer.appendChild(key);
+      });
+    }
+    
+    createKeyboard();
+  </script>
+</body>
+</html>
