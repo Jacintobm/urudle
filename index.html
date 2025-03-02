@@ -121,6 +121,52 @@ color: black;
   </div>
 
   <script>
+<script>
+
+  // 1. Funciones para manejar cookies y obtener la fecha de hoy
+  function setCookie(name, value, days) {
+    const d = new Date();
+    d.setTime(d.getTime() + (days*24*60*60*1000));
+    const expires = "expires=" + d.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+  }
+  
+  function getCookie(name) {
+    const cname = name + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(";");
+    for(let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while(c.charAt(0) === " ") {
+        c = c.substring(1);
+      }
+      if(c.indexOf(cname) === 0) {
+        return c.substring(cname.length, c.length);
+      }
+    }
+    return "";
+  }
+  
+  function getTodayDate() {
+    return new Date().toISOString().slice(0,10);
+  }
+  
+  // 2. Definición de variables y juego
+  const todayDate = getTodayDate();
+  // Aquí defines wordList, definitions, word, etc.
+  const wordList = [/* ... tus palabras ... */];
+  const definitions = { /* ... tus definiciones ... */ };
+  const todayIndex = new Date().getDate() % wordList.length;
+  const word = wordList[todayIndex].toUpperCase();
+  // ... y demás variables del juego ...
+  
+  // 3. Comprobar si el usuario ya ganó hoy mediante la cookie
+  if(getCookie("urudle_win") === todayDate) {
+    document.getElementById("definition").textContent = `\"${word}\" significa: ${definitions[word]}`;
+    document.getElementById("popup").style.display = "block";
+    // Opcional: puedes deshabilitar la entrada o teclado
+  }
+
     const wordList = ["manya", "burro", "pucho", "yuyos", "cheto", "ñoqui", "quemo", "bardo", "pique", "gamba", "boton", "birra", "facha", "asado", "fiero", "trapo", "pinta", "fiaca", "chori"];
     const definitions = {
       "MANYA": "Hinchas del Club Atlético Peñarol.",
